@@ -12,6 +12,7 @@ class Rastreador:
             cx = (x + w) / 2
             cy = (y + h) / 2
 
+            objectos_det=False
             for id, pt in self.centro_puntos.items():
                 dist = math.hypot(cx - pt[0], cy - pt[1])
 
@@ -19,11 +20,12 @@ class Rastreador:
                     self.centro_puntos[id] = (cx, cy)
                     print(self.centro_puntos[id])
                     objectos_id.append((x, y, w, h, id))
+                    objectos_det=True
                     break
-            else:
+            if objectos_det is False:
                 self.centro_puntos[self.id_count] = (cx, cy)
                 objectos_id.append((self.id_count, x, y, w, h))
-                self.id_count += 1
+                self.id_count += self.id_count+1 #aumento el id
 
         new_center_point = {}
         for obj_bb_id in objectos_id:

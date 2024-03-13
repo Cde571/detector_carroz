@@ -3,10 +3,10 @@ import numpy as np
 from Rastreador import Rastreador
 
 seguimiento = Rastreador()
-cap = cv2.VideoCapture("videovehiculos.mp4")
+cap = cv2.VideoCapture("C:\\Users\\caco2\\Desktop\\Sin titulo2.mp4")
 
 # Crear el objeto Background Subtractor MOG2
-deteccion = cv2.createBackgroundSubtractorMOG2(history=20000, varThreshold=50, detectShadows=False)
+deteccion = cv2.createBackgroundSubtractorMOG2(history=5000, varThreshold=20,detectShadows=False)
 
 while True:
     ret, frame = cap.read()
@@ -16,11 +16,11 @@ while True:
 
     frame = cv2.resize(frame, (500, 500))
 
-    altura_roi = 300
+    altura_roi = 180
     y_inicio = (frame.shape[0] - altura_roi) // 2
     y_fin = y_inicio + altura_roi
 
-    ancho_roi = 300
+    ancho_roi = 400
     x_inicio = (frame.shape[1] - ancho_roi) // 2
     x_fin = x_inicio + ancho_roi
 
@@ -32,20 +32,18 @@ while True:
     zona = frame[y_inicio:y_fin, x_inicio:x_fin]
 
     mask = deteccion.apply(zona)
-    _, mask = cv2.threshold(mask, 50, 255, cv2.THRESH_BINARY)
+    _, mask = cv2.threshold(mask, 254, 255, cv2.THRESH_BINARY)
 
     # Aplicar operaciones morfológicas para reducir el ruido
     kernel = np.ones((5, 5), np.uint8)
-    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
-    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
-    mask = cv2.GaussianBlur(mask, (5, 5), 1)
 
-    # Umbralizar para resaltar los objetos en blanco
-    _, thresholded = cv2.threshold(mask, 240, 255, cv2.THRESH_BINARY)
-
+    mask=cv2.GaussianBlur(mask, (5, 5), 3)
+    mask= cv2.erode(mask, kernel, iterations=1)
+    mask= cv2.dilate(mask, kernel, iterations=3)
+    mask = cv2.erode(mask, kernel, iterations=1)
+    _, thresholded = cv2.threshold(mask, 200, 255, cv2.THRESH_BINARY)
     contorno, _ = cv2.findContours(thresholded, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     detecciones = []
-
     for conto in contorno:
         area = cv2.contourArea(conto)
         if area > 1000:
