@@ -24,8 +24,8 @@ class Rastreador:
                     break
             if objectos_det is False:
                 self.centro_puntos[self.id_count] = (cx, cy)
-                objectos_id.append((self.id_count, x, y, w, h))
-                self.id_count += self.id_count+1 #aumento el id
+                objectos_id.append((x, y, w, h, self.id_count)) # Corrección aquí: añadir id al final
+                self.id_count += 1 # Corrección aquí: incrementar id_count en 1
 
         new_center_point = {}
         for obj_bb_id in objectos_id:

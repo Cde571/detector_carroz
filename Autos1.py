@@ -3,7 +3,7 @@ import numpy as np
 from Rastreador import Rastreador
 
 seguimiento = Rastreador()
-cap = cv2.VideoCapture("C:\\Users\\caco2\\Desktop\\Sin titulo2.mp4")
+cap = cv2.VideoCapture("C:\\Users\\Cristian\\PycharmProjects\\detector-autos\\Sin titulo2.mp4")
 
 # Crear el objeto Background Subtractor MOG2
 deteccion = cv2.createBackgroundSubtractorMOG2(history=5000, varThreshold=20,detectShadows=False)
